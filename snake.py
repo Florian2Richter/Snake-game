@@ -7,7 +7,11 @@ display=pygame.display.set_mode((1200,800))
 
 fly = pygame.image.load('C:\\Repos\\Snake-game\\pics\\40840-200.png')
 fly = pygame.transform.scale(fly, (40, 40))
-print(fly)
+
+milliseconds_delay = 6000
+enemy_spawn_event = pygame.USEREVENT + 1
+pygame.time.set_timer(enemy_spawn_event, milliseconds_delay) # generates spawn event
+
 
 pygame.display.set_caption('Schlangenspiel von Michael')
 
@@ -49,6 +53,10 @@ while not game_over:
             elif event.key == pygame.K_DOWN:
                 y1_change = grid_const
                 x1_change = 0
+        if event.type == enemy_spawn_event:
+            fly_x = random.randint(0,1200)
+            fly_y = random.randint(0,800)
+
         # pygame.draw.rect(dis,blue,[200,150,10,10])
        
         # update display
@@ -63,6 +71,7 @@ while not game_over:
         if  (x1-grid_const < fly_x+20 < x1+grid_const) and (y1-grid_const < fly_y+20 < y1+grid_const):
             fly_x = random.randint(0,1200)
             fly_y = random.randint(0,800)
+            pygame.time.set_timer(enemy_spawn_event, milliseconds_delay)
 
 
 
