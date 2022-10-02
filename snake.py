@@ -8,6 +8,8 @@ display=pygame.display.set_mode((1200,800))
 fly = pygame.image.load('C:\\Repos\\Snake-game\\pics\\40840-200.png')
 fly = pygame.transform.scale(fly, (40, 40))
 
+snake_length = 1
+
 milliseconds_delay = 6000
 enemy_spawn_event = pygame.USEREVENT + 1
 pygame.time.set_timer(enemy_spawn_event, milliseconds_delay) # generates spawn event
@@ -25,6 +27,8 @@ game_over=False
 
 y1 = 600
 x1 = 400
+
+snake_tail = [(x1, y1)]
 
 x1_change = 0       
 y1_change = 0
@@ -66,18 +70,32 @@ while not game_over:
         x1 += x1_change
         y1 += y1_change
 
-        # check for catching the fly
-        # if coordinates overlap, respawn fly
-        if  (x1-grid_const < fly_x+20 < x1+grid_const) and (y1-grid_const < fly_y+20 < y1+grid_const):
+        snake_tail = [(x1, y1)] + snake_tail
+
+        if len(snake_tail) > snake_length*10:
+            snake_tail.pop()
+
+        
+        # if coordinates overlap, respawn fly and increase length
+        if  (x1-grid_const < fly_x + 20 < x1+grid_const) and (y1-grid_const < fly_y + 20 < y1+grid_const):
+            
+            #increase snake length
+
+            snake_length += 1
+
+            #respwan fly
             fly_x = random.randint(0,1200)
             fly_y = random.randint(0,800)
+            
+            # reset the spawning timer
             pygame.time.set_timer(enemy_spawn_event, milliseconds_delay)
 
 
-
+        # hit the boundary
         if 0<=x1<=1200 and 0<=y1<=800:
             display.fill(white)
-            pygame.draw.circle(display,red,(x1,y1),10)
+            # pygame.draw.circle(display,red,(x1,y1),snake_length*10)
+            pygame.draw.lines(surface=display, color=blue, closed=False, points=snake_tail, width=2)
             display.blit(fly,(fly_x,fly_y))
             
             pygame.display.update()
